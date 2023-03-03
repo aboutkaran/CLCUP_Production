@@ -21,10 +21,48 @@ def dashboard(request):
 
 def employer_addbooking(request):
     role = Role.objects.all()
+    city = City.objects.all()
+    # if request.method == "POST":
+
+    #     services = request.POST.get('service')
+    #     no_of_worker = request.POST.get('no_of_worker')
+    #     gender = request.POST.get('gender')
+    #     start_Date = request.POST.get('start_Date')
+    #     landmark = request.POST.get('landmark')
+    #     city = request.POST.get('city')
+    #     state = request.POST.get('state')
+    #     pin = request.POST.get('pin')
+    #     anyother = request.POST.get('anyother')
+    #     salary = request.POST.get('salary')
+    #     goverment = request.POST.get('goverment')
+    #     department = request.POST.get('dep_name')
+
+    #     role_id = Role.objects.get(id=services)
+    #     # print("roleeeeeeeeeeeeeeee",role_id.id)
+    #     # role = Role.objects.get()
+
+    #     employer_obj = Employer.objects.get(admin=request.user.id)
+
+    #     booking = Booking.objects.create(employer_id=employer_obj, services=role_id, no_of_worker=no_of_worker, gender_preference=gender, work_start_Date=start_Date,
+    #                                      landmark=landmark, city=city, state=state, pin_code=pin, specific_requirements=anyother, sallery_offerd=salary, goverment=goverment, department=department)
+    #     booking.save()
+
+    #     messages.success(request, "Successfully Created employer")
+    city_name = ""
+    role_final=""
+    if request.method=="POST":
+        city_search=request.POST.get('city_search')
+        city_name=City.objects.get(id=city_search)
+        role_final=Role.objects.filter(city_id=city_search)
+
+    return render(request, 'employer/add_booking.html', {'role': role,'city':city,'city_name':city_name,'role_final':role_final})
+
+def employer_doaddbooking(request):
+    role=Role.objects.all()
     if request.method == "POST":
 
         services = request.POST.get('service')
-        no_of_worker = request.POST.get('no_of_worker')
+        no_of_worker = int(request.POST.get('no_of_worker'))
         gender = request.POST.get('gender')
         start_Date = request.POST.get('start_Date')
         landmark = request.POST.get('landmark')
@@ -32,23 +70,25 @@ def employer_addbooking(request):
         state = request.POST.get('state')
         pin = request.POST.get('pin')
         anyother = request.POST.get('anyother')
-        salary = request.POST.get('salary')
-        goverment = request.POST.get('goverment')
+        salary = int(request.POST.get('salary'))
+        salary_temp=Role.objects.get(id=services)
+        salary1=int(salary_temp.max_sal)
+        total_monthly = int(no_of_worker * salary1)
+        goverment = request.POST.get('goverment2')
         department = request.POST.get('dep_name')
-
         role_id = Role.objects.get(id=services)
-        # print("roleeeeeeeeeeeeeeee",role_id.id)
-        # role = Role.objects.get()
-
         employer_obj = Employer.objects.get(admin=request.user.id)
 
-        booking = Booking.objects.create(employer_id=employer_obj, services=role_id, no_of_worker=no_of_worker, gender_preference=gender, work_start_Date=start_Date,
-                                         landmark=landmark, city=city, state=state, pin_code=pin, specific_requirements=anyother, sallery_offerd=salary, goverment=goverment, department=department)
+        if department == "":
+            department = "Private"
+        booking = Booking.objects.create(employer_id=employer_obj, services=role_id, no_of_worker=no_of_worker, gender_preference=gender, work_start_Date=start_Date, landmark=landmark,
+                                         city=city, state=state, pin_code=pin, specific_requirements=anyother, sallery_offerd=salary1, goverment=goverment, department=department, total_monthly=total_monthly)
+
         booking.save()
+        messages.success(request, "Successfully Booking For Employer")
+        return redirect('employer_addbooking')
+    return render(request,'employer/add_booking.html',{'role':role,'city':city})
 
-        messages.success(request, "Successfully Created employer")
-
-    return render(request, 'employer/add_booking.html', {'role': role})
 
 
 def employer_managebooking(request):
@@ -60,18 +100,20 @@ def employer_managebooking(request):
 def employer_bookinglist(request):
 
     booking = Employer.objects.get(admin=request.user.id)
+    # print(booking)
     booking_data = Booking.objects.filter(employer_id=booking)
+    print(booking_data)
 
     return render(request, 'employer/booking_list.html', {'booking_data': booking_data, 'booking': booking})
 
-def employer_doempbooking(request,id):
+def employer_doempbooking(request,id,bookingid):
     booking = Employer.objects.get(admin=request.user.id)
-    monthly = Booking.objects.get(employer_id__admin = request.user.id)
+    monthly = Booking.objects.get(id=bookingid)
     count=monthly.no_of_worker
-    monthly_offered=monthly.sallery_offerd/float(count)
+    monthly_offered=monthly.sallery_offerd
     emp_gov=Employer.objects.get(admin=request.user.id)
     depttype=emp_gov.section
-    member = Member.objects.filter(Q(role_id_id=id) | Q(job_seeker=depttype))
+    member = Member.objects.filter(Q(role_id_id=id) & Q(job_seeker=depttype))
     membercount=member.count()
     if membercount>=int(count) :    
         no_of_emp=count
@@ -85,7 +127,7 @@ def employer_doempbooking(request,id):
     request.session['roleId']=id
     request.session['dept']=depttype
     request.session.save()
-    return render(request,'employer/doempbooking.html',{'payment':payment,'no_of_emp':no_of_emp,'monthly_offered':monthly_offered,'amount':amount})
+    return render(request,'employer/doempbooking.html',{'payment':payment,'no_of_emp':no_of_emp,'monthly_offered':monthly_offered,'amount':amount,'bookingid':bookingid})
 
 
 def employer_manageattendance(request):

@@ -102,8 +102,7 @@
                   <p class="text-muted">Salary per Employee</p>
                   <p class="text-dark">{{monthly_offered}}</p>
                 </div>
-                  <a href="{% url 'employer_dobooking' id %}"><button type="button" class="btn btn-warning">Go to the payment Page</button></a>
-              
+                  <a href="{% url 'employer_dobooking' id bookingid %}"><button type="button" class="btn btn-warning">Go to the payment Page</button></a>
               </div>
             </div>
             {% define False as continue %}
@@ -117,7 +116,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="width: 7rem">Close</button>
+        <a href="{% url 'employer_managebooking' %}"><button type="button" class="btn btn-primary"  data-bs-dismiss="modal" style="width: 7rem">Close</button></a>
       </div>
     </div>
    </div>

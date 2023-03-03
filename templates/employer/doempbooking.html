@@ -46,7 +46,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
-    <form action='{% url 'bookingSuccess' %}' method="POST">
+    <form action='{% url 'bookingSuccess' bookingid %}' method="POST">
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <script>
            var options = {
@@ -56,7 +56,7 @@
                "name": "Ayodhya",
                "description": "Transaction",
                "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-               "callback_url": "http://127.0.0.1:8000/booking_success/",
+               "callback_url": "http://127.0.0.1:8000/booking_success/{{bookingid}}",
                "notes": {
                    "address": "Razorpay Corporate Office"
                },

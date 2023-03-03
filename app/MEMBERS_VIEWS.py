@@ -261,10 +261,10 @@ def member_profile(request):
     return render(request,'MEMBERS/profile.html')  
 
 
-def member_list(request):
+def member_list(request,bookingid):
         count=request.session.get(f'request.user.id',None)
         employer=Employer.objects.get(admin=request.user.id)
-        user=Booking.objects.get(employer_id=employer.id)
+        user=Booking.objects.get(id=bookingid)
         depttype=request.session.get('dept',None)
         roleId=request.session.get('roleId',None)
         if user.paid==1:

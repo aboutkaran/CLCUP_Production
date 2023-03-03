@@ -1,5 +1,14 @@
 {% extends 'employer/includes/base.html' %}
+{% load static %}
+<script>
+  function onChange(event) {
+      console.log(event.target.value)
+  }
+</script>
 {% block content %}
+{% block linkcss %}
+<link rel="stylesheet" href="{% static 'datepicker/jquery-ui.min.css' %}">
+{% endblock linkcss %}
 <style>
     ::placeholder {
         color: black !important;
@@ -25,15 +34,37 @@
     <div class="container">
         <div class="row">
             <div class="col-xl-12">
-               
-              
-                
                 <section class="hk-sec-wrapper" style="padding: 2.5rem;border-radius: 2rem;">
                     <h5 class="hk-sec-title" style="color:black !important;">EMPLOYER BOOKING FORM</h5>
                     <hr>
+                    <form action="" method="POST">
+                      {%csrf_token%}
+                      <div class="row">
+                        <div class="col">
+                          <select id="select1" class="form-select form-control" name="city_search">
+                            <option selected disabled="true">----City----</option>
+                            {% for i in city %}
+                            {% if i.active %}
+                            <option value="{{i.id}}">{{i.city}}</option>
+                            {% endif %}
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row justify-content-center mt-2">
+                        <div class="col-3">
+                          <button type="submit" class="bg-success w-100 border-0 p-2" style="margin-bottom:20px; border-radius:8pxpx;" value="Search" style="border-radius: .25rem">
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                     </form>
+                     <center>
+                      <h1>{% include 'BASE/messages.html' %}</h1>
+                    </center>
                     <div class="row text ">
                         <div class="col pa-0">
-                          <form method="POST" action="">
+                          <form method="POST" action="{% url 'employer_doAddBooking' %}" onsubmit="return validation()">
                             {% csrf_token %}
                             <input type="text" value="200" name="amount" hidden>
                             
@@ -42,20 +73,23 @@
                                 <div class="form-row">
                 
                                   <div class="col-6 col-md-6 form-group">
-                                    <select class="form-select form-control" aria-label="Default select example" name="service">
-                                      {% comment %} <option value="" style="color:black !important;">Services</option> {% endcomment %}
-                                      {% for i in role %}
-                                      <option value="{{i.id}}">{{i.role_name}}</option>
+                                    <select class="form-select form-control" aria-label="Default select example" name="service" required>
+                                      <option value="" id="select2">Services</option>
+                                      {% for i in role_final %}
+                                      {% if i.is_employer %}
+                                      <option value="{{i.id}}" data-customvalue="{{i.max_sal}}">{{i}}({{i.max_sal}})</option>
+                                      {% endif %}
                                       {% endfor %}
                                       
                                     </select>
                                   </div>
                 
                                   <div class="col-6 col-md-6 form-group">
-                                    <input class="form-control" placeholder="Number of Workers"  type="number" name="no_of_worker" />
+                                    <input class="form-control" placeholder="Number of Workers"  type="number" name="no_of_worker" id="workersCount" required/>
+                                    <span id="wnameerror" class="text-danger font-weight-bold"></span>
                                   </div>
                                   <div class="col-6 form-group">
-                                    <select class="form-select form-control" aria-label="Default select example" name="gender">
+                                    <select class="form-select form-control" aria-label="Default select example" name="gender" required>
                                       <option selected style="color:black !important;">Gender Preference</option>
                                       <option value="Male">Male</option>
                                       <option value="Female">Female</option>
@@ -64,23 +98,23 @@
                                   </div>
                 
                                   <div class="col-6 col-md-6 form-group">
-                                    <input type="text" size="30" class="form-control" id="datepicker" placeholder="Work start date"
-                                      name="start_Date">
+                                    <input type="text"  class="form-control" id="datepicker" placeholder="Work start date"
+                                      name="start_Date" required>
                                   </div>
-                
                                   <div class="col-6 col-md-6 form-group">
                                     <input class="form-control" placeholder="Work location (landmark)"  type="text"
-                                      name="landmark" />
+                                      name="landmark" required/>
                                   </div>
                 
                                   <div class="col-6 col-md-6 form-group">
-                                    <input class="form-control" placeholder="City"  type="text" name="city" />
+                                    <input class="form-control" placeholder="City"  type="text" name="city" value="{{city_name}}" readonly/>
                                   </div>
                                   <div class="col-6 form-group">
-                                    <input class="form-control" placeholder="State" type="text" name="state" />
+                                    <input class="form-control" placeholder="State" type="text" name="state" required />
                                   </div>
                                   <div class="col-6 form-group">
-                                    <input class="form-control" placeholder="Pin Code" type="number" min="100000" max="999999" name="pin" required />
+                                    <input class="form-control" placeholder="Pin Code" type="text" name="pin" id="pinCode" required />
+                                    <span id="pnameerror" class="text-danger font-weight-bold"></span>
                                   </div>
                 
                                   <div class="col-12 form-group">
@@ -90,13 +124,10 @@
                                   </div>
                 
                                   <div class="col-12 form-group">
-                                    <input class="form-control" placeholder="Monthly payout"  type="text" name="salary" />
+                                    <input class="form-control" placeholder="Monthly payout"  type="text" name="salary" id="monthlyPayout"/>
                                   </div>
                 
-                
-                
-                
-                
+                                  <input type="text" name="goverment2" value="{{sectn}}" hidden>
                                   <div class="col-8 col-md-6 form-group">
                                     <div class="form-check form-check-inline">
                                       <label class="form-check-label" for="inlineRadio1" style="color:black !important;">Requirement for goverment department?</label>
@@ -146,11 +177,117 @@
     </div>
 </div>
 </div>
-<script>
-    CKEDITOR.replace( 'desc' );
-    CKEDITOR.replace( 'Skills' );
-    CKEDITOR.replace( 'Experience' );
- </script>
 
+{% block linkjs %}
+<script src="{% static 'datepicker/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'datepicker/jquery-ui.min.js' %}"></script>
+{% endblock linkjs %}
+<script>
+
+//monthlyPayout js code start
+
+const workersCount = document.getElementById("workersCount");
+const monthlyPayout = document.getElementById("monthlyPayout"); 
+
+
+workersCount.addEventListener("keyup", (event)=>{
+  if(parseInt(workersCount.value) > 0){
+    monthlyPayout.value = parseInt(workersCount.value) * 9000
+
+  }else{
+    monthlyPayout.value = 0;
+  }
+});
+
+
+  {% comment %} date JavaScript {% endcomment %}
+  $(document).ready(function () {
+    $('#datepicker').datepicker({
+      yearRange: ":+10",
+      dateFormat: "yy-mm-dd",
+      changeMonth: true,
+      changeYear: true
+    });
+  })
+
+  $(document).ready(function () {
+    $('#datepickertwo').datepicker({
+      yearRange: ":+10",
+      dateFormat: "yy-mm-dd",
+      changeMonth: true,
+      changeYear: true
+    });
+  });
+  function validation() {
+    let workersCountValue = document.getElementById("workersCount").value;
+    let pinCodeValue = document.getElementById("pinCode").value;
+    let mobileNumberValue = document.getElementById("mobileNumber").value;
+
+
+    let workersCheck = /^[1-9]{1,}$/
+    let pnumberCheck = /^[0-9]{6}$/ ;
+    let numberCheck = /^[6789][0-9]{9}$/ ;
+
+
+    
+    if (workersCheck.test(workersCountValue)) {
+      //document.getElementById("workersCount").style.border = "2px solid green";
+      document.getElementById("wnameerror").innerHTML = "";
+    }
+    else {
+      //document.getElementById("workersCount").style.border = "2px solid rgb(234 27 27 / 71%)";
+      document.getElementById("wnameerror").innerHTML = "**min one worker";
+      return false;
+    }
+
+    if (pnumberCheck.test(pinCodeValue)) {
+      //document.getElementById("pinCode").style.border = "2px solid green";
+      document.getElementById("pnameerror").innerHTML = " ";
+    }
+    else {
+      //document.getElementById("pinCode").style.border = "2px solid rgb(234 27 27 / 71%)";
+      document.getElementById("pnameerror").innerHTML = "**Pin code is invalid";
+      return false;
+    }
+
+    if (numberCheck.test(mobileNumberValue)) {
+      //document.getElementById("mobileNumber").style.border = "2px solif green";
+      document.getElementById("mnameerror").innerHTML = "";
+    }
+    else {
+      //document.getElementById("mobileNumber").style.border = "2px solid rgb(234 27 27 / 71%)";
+      document.getElementById("mnameerror").innerHTML = "**Mobile No is invalid";
+      return false;
+    }
+
+  }
+
+  {% comment %} department start {% endcomment %}
+
+  document.getElementById("inlineRadio1").addEventListener("click", read_add);
+  document.getElementById("inlineRadio2").addEventListener("click", read_remove);
+ 
+   function read_add(){
+     document.getElementById('department').hidden = false;
+   }
+ 
+   function read_remove() {
+     document.getElementById('department').hidden = true ;
+   }
+
+  {% comment %} department end {% endcomment %}
+
+
+
+</script>
+
+<script>
+  function demo(){
+    
+    let x = document.getElementById("select2").value= "{% for i in role %}{{i.min_sal}}{% endfor %}"
+    document.getElementById("demo").innerHTML = "You selected: " + x;
+
+  }
+</script>
 
 {% endblock content %}
