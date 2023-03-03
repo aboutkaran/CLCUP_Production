@@ -1,7 +1,7 @@
 {% load widget_tweaks %}
 {% load tagger%}
 {% define True as continue %}
-{% comment %} {% load widget_tweaks %} {% endcomment %}
+{% load widget_tweaks %} 
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 
 {% comment %} <div class="modal-dialog modal-dialog-edit" style="min-width: 800px !important;" > {% endcomment %}
@@ -16,7 +16,7 @@
       </div>
       <div class="modal-body">
         <form hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
-         {% if booking.paid == True or emp_gov.section == 'Government' %} 
+         {% comment %} {% if booking.paid == True or emp_gov.section == 'Government' %}  {% endcomment %}
         <table class="table table-striped table-responsive">
           <thead>
             <tr class="bg-primary">
@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            {% endif %}
+            {% comment %} {% endif %} {% endcomment %}
            {% comment %} <h1>{% if {{boo.goverment == "Goverment"}} %}helloo{% endif %}</h1> {% endcomment %}
            {% comment %} {{g}}
           {% for i in g %}
@@ -48,11 +48,11 @@
           {% endfor %} {% endcomment %}
             {% comment %} {% if boo. %}{% endif %} {% endcomment %}
             
-            {% for i in mem %}
+            {% comment %} {% for i in mem %} {% endcomment %}
             
             {% comment %} {% if d == "Goverment" %} {% endcomment %}
             
-            {% if emp_gov.section == 'Government' %}
+            {% comment %} {% if emp_gov.section == 'Government' %}
             <tr>
               <th scope="row">{{forloop.counter}}</th>
               <td>{{i.admin.username}}</td>
@@ -81,7 +81,7 @@
   
               </td>
             </tr>
-            {% elif continue %}
+            {% elif continue %} {% endcomment %}
 
             {% comment %} payemt editing start  {% endcomment %}
             <div class="card" style="width: 21rem; margin: 15px auto;">
@@ -92,24 +92,27 @@
               <div class="card-body text-center">
                 <div class="d-flex justify-content-between">
                   <p class="text-muted">No of Employees Required</p>
-                  <p class="text-dark">{{count}}</p>
+                  {% comment %} <p class="text-dark">{{count}}</p> {% endcomment %}
+                  <p class="text-dark">2</p>
                 </div>
                 <div class="d-flex justify-content-between">
                   <p class="text-muted">No of Employees Available</p>
-                  <p class="text-dark">{{membercount}}</p>
+                  {% comment %} <p class="text-dark">{{membercount}}</p> {% endcomment %}
+                  <p class="text-dark">3</p>
                 </div>
                 <div class="d-flex justify-content-between">
                   <p class="text-muted">Salary per Employee</p>
-                  <p class="text-dark">{{monthly_offered}}</p>
-                </div>
+                  {% comment %} <p class="text-dark">{{monthly_offered}}</p> {% endcomment %}
+                  <p class="text-dark">3000</p>
+                {% comment %} </div>
                   <a href="{% url 'employer_dobooking' id bookingid %}"><button type="button" class="btn btn-warning">Go to the payment Page</button></a>
-              </div>
+              </div> {% endcomment %}
             </div>
-            {% define False as continue %}
+            {% comment %} {% define False as continue %}
           
             {% endif %}
             
-            {% endfor %}
+            {% endfor %} {% endcomment %}
 
           </tbody>
         </table>
@@ -121,36 +124,4 @@
     </div>
    </div>
   </div>
-
-   {% comment %} <form action='{% url 'bookingSuccess' %}' method="POST">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script>
-          var options = {
-            key: "rzp_test_czVP739sBN5blU", // Enter the Key ID generated from the Dashboard
-            amount: "70000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            currency: "INR",
-            name: "UPCLC",
-            description: "Test Transaction",
-            image: "https://example.com/your_logo",
-            order_id: "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            callback_url: "https://eneqd3r9zrjok.x.pipedream.net/",
-            prefill: {
-              name: "Karan Ghai",
-              email: "karanghai@gmail.com",
-              contact: "9000090000",
-            },
-            notes: {
-              address: "Razorpay Corporate Office",
-            },
-            theme: {
-              color: "#3399cc",
-            },
-          };
-          var rzp1 = new Razorpay(options);
-          document.getElementById("rzp-button1").onclick = function (e) {
-            rzp1.open();
-            e.preventDefault();
-          };
-        </script>
-   </form> {% endcomment %}
 {% endwith %}

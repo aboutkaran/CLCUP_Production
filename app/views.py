@@ -123,23 +123,20 @@ def success(request):
 def worlker_list(request,id,bookingid):
     # Employer_id = request.user
     # print("EEEEEEEEE",Employer_id)
-    role = Role.objects.get(id=id)
-    mem = Member.objects.filter(role_id = role).order_by('?')[:3]
-    emp_gov=Employer.objects.get(admin=request.user.id)
-    # monthly = Booking.objects.get(employer_id__admin = request.user.id)
-    monthly = Booking.objects.get(id=bookingid)
-    booking=Employer.objects.get(admin=request.user.id)
-    count=monthly.no_of_worker
-    monthly_offered=monthly.sallery_offerd
-    depttype=emp_gov.section
-    # print(id)
-    member = Member.objects.filter(Q(role_id_id=id) & Q(job_seeker=depttype))
-    membercount=member.count()
-    # print(membercount)
-    # path=request.path
-    # print(path)
+    # role = Role.objects.get(id=id)
+    # mem = Member.objects.filter(role_id = role)
+    # emp_gov=Employer.objects.get(admin=request.user.id)
+    # # monthly = Booking.objects.get(employer_id__admin = request.user.id)
+    # # monthly = Booking.objects.get(id=bookingid)
+    # booking=Employer.objects.get(admin=request.user.id)
+    # # count=monthly.no_of_worker
+    # # monthly_offered=monthly.sallery_offerd
+    # depttype=emp_gov.section
+    # member = Member.objects.filter(Q(role_id_id=id) & Q(job_seeker=depttype))
+    # membercount=member.count()
     
-    return render(request,'demo.html',{'member':member,'booking':booking,'mem':mem,'emp_gov':emp_gov,'count':count,'monthly_offered':monthly_offered,'membercount':membercount,'id':id,'bookingid':bookingid})      
+    return render(request,'demo.html')  
+    # return render(request,'demo.html',{'booking':booking,'mem':mem,'emp_gov':emp_gov,'membercount':membercount,'id':id,'bookingid':bookingid})    
 
 @csrf_exempt
 def booking_Success(request,bookingid):
