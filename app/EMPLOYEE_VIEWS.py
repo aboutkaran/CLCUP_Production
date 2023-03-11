@@ -78,7 +78,6 @@ def employer_doaddbooking(request):
         department = request.POST.get('dep_name')
         role_id = Role.objects.get(id=services)
         employer_obj = Employer.objects.get(admin=request.user.id)
-
         if department == "":
             department = "Private"
         booking = Booking.objects.create(employer_id=employer_obj, services=role_id, no_of_worker=no_of_worker, gender_preference=gender, work_start_Date=start_Date, landmark=landmark,
@@ -465,8 +464,10 @@ def do_emp_outer(request):
         state = request.POST.get('state')
         pin = request.POST.get('pin')
         anyother = request.POST.get('anyother')
-        salary = int(request.POST.get('salary'))
-        total_monthly = int(no_of_worker * salary)
+        # salary = int(request.POST.get('salary'))
+        salary_temp=Role.objects.get(id=services)
+        salary1=int(salary_temp.max_sal)
+        total_monthly = int(no_of_worker * salary1)
         print("totalllllllll", total_monthly)
         goverment = request.POST.get('goverment2')
         department = request.POST.get('dep_name')
@@ -479,7 +480,7 @@ def do_emp_outer(request):
         role_id = Role.objects.get(id=services)
         employer_obj = Employer.objects.get(admin=request.user.id)
         booking = Booking.objects.create(employer_id=employer_obj, services=role_id, no_of_worker=no_of_worker, gender_preference=gender, work_start_Date=start_Date, landmark=landmark,
-                                         city=city, state=state, pin_code=pin, specific_requirements=anyother, sallery_offerd=salary, goverment=goverment, department=department, total_monthly=total_monthly)
+                                         city=city, state=state, pin_code=pin, specific_requirements=anyother, sallery_offerd=salary1, goverment=goverment, department=department, total_monthly=total_monthly)
 
         booking.save()
         messages.success(request, "Successfully Booking For Employer")

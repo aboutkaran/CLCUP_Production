@@ -1,7 +1,7 @@
 {% load widget_tweaks %}
 {% load tagger%}
 {% define True as continue %}
-{% load widget_tweaks %} 
+{% comment %} {% load widget_tweaks %} {% endcomment %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 
 {% comment %} <div class="modal-dialog modal-dialog-edit" style="min-width: 800px !important;" > {% endcomment %}
@@ -16,7 +16,7 @@
       </div>
       <div class="modal-body">
         <form hx-post="{{ request.path }}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}' class="modal-content">
-         {% comment %} {% if booking.paid == True or emp_gov.section == 'Government' %}  {% endcomment %}
+         {% if booking.paid == True or emp_gov.section == 'Government' %} 
         <table class="table table-striped table-responsive">
           <thead>
             <tr class="bg-primary">
@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            {% comment %} {% endif %} {% endcomment %}
+            {% endif %}
            {% comment %} <h1>{% if {{boo.goverment == "Goverment"}} %}helloo{% endif %}</h1> {% endcomment %}
            {% comment %} {{g}}
           {% for i in g %}
@@ -48,11 +48,10 @@
           {% endfor %} {% endcomment %}
             {% comment %} {% if boo. %}{% endif %} {% endcomment %}
             
-            {% comment %} {% for i in mem %} {% endcomment %}
             
             {% comment %} {% if d == "Goverment" %} {% endcomment %}
-            
-            {% comment %} {% if emp_gov.section == 'Government' %}
+            {% if emp_gov.section == 'Government' %}
+            {% for i in mem %}
             <tr>
               <th scope="row">{{forloop.counter}}</th>
               <td>{{i.admin.username}}</td>
@@ -66,7 +65,9 @@
                 <button type="button" class="btn btn-success bg-opacity-50" hidden>Accepted</button>
               </td>
             </tr>
+            {% endfor %}
             {% elif monthly.paid == True %}
+            {% for i in mem %}
             <tr>
               <th scope="row">{{forloop.counter}}</th>
               <td>{{i.admin.username}}</td>
@@ -78,11 +79,11 @@
               <td><button type="button" class="btn btn-warning bg-opacity-50" href="#">Request</button></td>
               <td class="text-center">
                 <button type="button" class="btn btn-success bg-opacity-50" hidden>Accepted</button>
-  
               </td>
             </tr>
-            {% elif continue %} {% endcomment %}
-
+            {% endfor %}
+            {% elif continue %}
+            
             {% comment %} payemt editing start  {% endcomment %}
             <div class="card" style="width: 21rem; margin: 15px auto;">
               <div class="card-header text-center">
@@ -92,34 +93,35 @@
               <div class="card-body text-center">
                 <div class="d-flex justify-content-between">
                   <p class="text-muted">No of Employees Required</p>
-                  {% comment %} <p class="text-dark">{{count}}</p> {% endcomment %}
-                  <p class="text-dark">2</p>
+                  <p class="text-dark">{{count}}</p>
                 </div>
                 <div class="d-flex justify-content-between">
                   <p class="text-muted">No of Employees Available</p>
-                  {% comment %} <p class="text-dark">{{membercount}}</p> {% endcomment %}
-                  <p class="text-dark">3</p>
+                  <p class="text-dark">{{membercount}}</p>
                 </div>
                 <div class="d-flex justify-content-between">
                   <p class="text-muted">Salary per Employee</p>
-                  {% comment %} <p class="text-dark">{{monthly_offered}}</p> {% endcomment %}
-                  <p class="text-dark">3000</p>
-                {% comment %} </div>
+                  <p class="text-dark">{{monthly_offered}}</p>
+                </div>
+                {% if membercount == 0 %}
+                <button class="btn btn-danger" disabled>No employees available right now</button>
+                {% else %}
                   <a href="{% url 'employer_dobooking' id bookingid %}"><button type="button" class="btn btn-warning">Go to the payment Page</button></a>
-              </div> {% endcomment %}
+                {% endif %}
+              </div>
             </div>
-            {% comment %} {% define False as continue %}
+            {% define False as continue %}
           
             {% endif %}
             
-            {% endfor %} {% endcomment %}
-
           </tbody>
         </table>
         </form>
       </div>
       <div class="modal-footer">
-        <a href="{% url 'employer_managebooking' %}"><button type="button" class="btn btn-primary"  data-bs-dismiss="modal" style="width: 7rem">Close</button></a>
+        <a href="{%url 'employer_managebooking'%}">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="width: 7rem">Close</button>
+        </a>
       </div>
     </div>
    </div>
