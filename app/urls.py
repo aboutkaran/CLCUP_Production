@@ -88,7 +88,7 @@ urlpatterns = [
     path('MEMBERS/Dashboard', MEMBERS_VIEWS.dashboard,name="member_dashboard"),
     path('MEMBERS/payment_information', MEMBERS_VIEWS.payment_information,name="payment_information"),
     path('MEMBERS/profile',MEMBERS_VIEWS.member_profile,name="member_profile"),
-    path('MEMBERS/list',MEMBERS_VIEWS.member_list,name="member_list"),
+    path('MEMBERS/list/<int:bookingid>',MEMBERS_VIEWS.member_list,name="member_list"),
     
     
 
@@ -98,12 +98,11 @@ urlpatterns = [
 
     path('EMPLOYERS/booking', EMPLOYEE_VIEWS.emp_booking,name="emp_booking"),
     
-    
-    
     path('EMPLOYERS/Dashboard', EMPLOYEE_VIEWS.dashboard,name="dashboard"),
     path('EMPLOYERS/ADDBOOKING', EMPLOYEE_VIEWS.employer_addbooking,name="employer_addbooking"),
+    path('EMPLOYERS/DOADDBOOKING', EMPLOYEE_VIEWS.employer_doaddbooking,name="employer_doAddBooking"),
     path('EMPLOYERS/MANAGEBOOKING', EMPLOYEE_VIEWS.employer_managebooking,name="employer_managebooking"),
-    path('EMPLOYERS/DOEMPLOYEEBOOKING/<int:id>',EMPLOYEE_VIEWS.employer_doempbooking,name="employer_dobooking"),
+    path('EMPLOYERS/DOEMPLOYEEBOOKING/<int:id>/<int:bookingid>',EMPLOYEE_VIEWS.employer_doempbooking,name="employer_dobooking"),
     path('EMPLOYERS/MANAGEATTENDANCE', EMPLOYEE_VIEWS.employer_manageattendance,name="employer_manageattendance"),
     path('EMPLOYERS/MANAGEATTENDANCE/<str:date>', EMPLOYEE_VIEWS.employer_manageindiv_atten,name="employer_manageindiv_atten"),
     path('EMPLOYERS/bookinglist', EMPLOYEE_VIEWS.employer_bookinglist,name="booking_list"),
@@ -131,8 +130,8 @@ urlpatterns = [
 
 
 
-    path('worlker_list/<int:id>',views.worlker_list,name="worlker_list"),
-    path('booking_success/', views.booking_Success , name='bookingSuccess'),
+    path('worlker_list/<int:id>/<int:bookingid>',views.worlker_list,name="worlker_list"),
+    path('booking_success/<int:bookingid>', views.booking_Success , name='bookingSuccess'),
     
 
 

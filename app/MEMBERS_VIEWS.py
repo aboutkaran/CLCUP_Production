@@ -261,22 +261,20 @@ def member_profile(request):
     return render(request,'MEMBERS/profile.html')  
 
 
-def member_list(request):
+def member_list(request,bookingid):
         count=request.session.get(f'request.user.id',None)
         employer=Employer.objects.get(admin=request.user.id)
-        user=Booking.objects.get(employer_id=employer.id)
+        user=Booking.objects.get(id=bookingid)
         depttype=request.session.get('dept',None)
         roleId=request.session.get('roleId',None)
-        if user.paid==1:
-            # member=Member.objects.all()
-            member = Member.objects.filter(Q(role_id_id=roleId) | Q(job_seeker=depttype))
+        if user.paid==1:   
+            member = Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))
             if count +2 <= member.count():
-                # membertoShow=Member.objects.all()[:count+2]
-                membertoShow=Member.objects.filter(Q(role_id_id=roleId) | Q(job_seeker=depttype))[:count+2]
+                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))[:count+2]
             elif count +1 == member.count():
-                membertoShow=Member.objects.filter(Q(role_id_id=roleId) | Q(job_seeker=depttype))[:count+1]
+                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))[:count+1]
             else :
-                membertoShow=Member.objects.filter(Q(role_id_id=roleId) | Q(job_seeker=depttype))
+                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))
             return render(request, 'MEMBERS/list.html',{'member':membertoShow,'count':count})    
         else :
             return redirect('employer_managebooking')

@@ -16,7 +16,7 @@
     <td class="border_color">
         <!-- Button trigger modal -->
         {% comment %} <button class="btn btn-warning badge rounded-pill text-dark" hx-get="{% url 'worlker_list' movie.services.id %}" hx-target="#dialog">List Of Workers</button> {% endcomment %}
-        <button type="button" class="btn btn-warning badge rounded-pill text-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" hx-get="{% url 'worlker_list' movie.services.id %}" hx-target="#dialog">
+        <button type="button" class="btn btn-warning badge rounded-pill text-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" hx-get="{% url 'worlker_list' movie.services.id movie.id%}" hx-target="#dialog">
             List Of Workers
         </button>
         <!-- Modal -->

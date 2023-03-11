@@ -48,11 +48,10 @@
           {% endfor %} {% endcomment %}
             {% comment %} {% if boo. %}{% endif %} {% endcomment %}
             
-            {% for i in mem %}
             
             {% comment %} {% if d == "Goverment" %} {% endcomment %}
-            
             {% if emp_gov.section == 'Government' %}
+            {% for i in mem %}
             <tr>
               <th scope="row">{{forloop.counter}}</th>
               <td>{{i.admin.username}}</td>
@@ -66,7 +65,9 @@
                 <button type="button" class="btn btn-success bg-opacity-50" hidden>Accepted</button>
               </td>
             </tr>
+            {% endfor %}
             {% elif monthly.paid == True %}
+            {% for i in mem %}
             <tr>
               <th scope="row">{{forloop.counter}}</th>
               <td>{{i.admin.username}}</td>
@@ -78,11 +79,11 @@
               <td><button type="button" class="btn btn-warning bg-opacity-50" href="#">Request</button></td>
               <td class="text-center">
                 <button type="button" class="btn btn-success bg-opacity-50" hidden>Accepted</button>
-  
               </td>
             </tr>
+            {% endfor %}
             {% elif continue %}
-
+            
             {% comment %} payemt editing start  {% endcomment %}
             <div class="card" style="width: 21rem; margin: 15px auto;">
               <div class="card-header text-center">
@@ -102,56 +103,27 @@
                   <p class="text-muted">Salary per Employee</p>
                   <p class="text-dark">{{monthly_offered}}</p>
                 </div>
-                  <a href="{% url 'employer_dobooking' id %}"><button type="button" class="btn btn-warning">Go to the payment Page</button></a>
-              
+                {% if membercount == 0 %}
+                <button class="btn btn-danger" disabled>No employees available right now</button>
+                {% else %}
+                  <a href="{% url 'employer_dobooking' id bookingid %}"><button type="button" class="btn btn-warning">Go to the payment Page</button></a>
+                {% endif %}
               </div>
             </div>
             {% define False as continue %}
           
             {% endif %}
             
-            {% endfor %}
-
           </tbody>
         </table>
         </form>
       </div>
       <div class="modal-footer">
+        <a href="{%url 'employer_managebooking'%}">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="width: 7rem">Close</button>
+        </a>
       </div>
     </div>
    </div>
   </div>
-
-   {% comment %} <form action='{% url 'bookingSuccess' %}' method="POST">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        <script>
-          var options = {
-            key: "rzp_test_czVP739sBN5blU", // Enter the Key ID generated from the Dashboard
-            amount: "70000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            currency: "INR",
-            name: "UPCLC",
-            description: "Test Transaction",
-            image: "https://example.com/your_logo",
-            order_id: "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            callback_url: "https://eneqd3r9zrjok.x.pipedream.net/",
-            prefill: {
-              name: "Karan Ghai",
-              email: "karanghai@gmail.com",
-              contact: "9000090000",
-            },
-            notes: {
-              address: "Razorpay Corporate Office",
-            },
-            theme: {
-              color: "#3399cc",
-            },
-          };
-          var rzp1 = new Razorpay(options);
-          document.getElementById("rzp-button1").onclick = function (e) {
-            rzp1.open();
-            e.preventDefault();
-          };
-        </script>
-   </form> {% endcomment %}
 {% endwith %}
