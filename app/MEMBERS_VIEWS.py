@@ -131,9 +131,6 @@ def douserregister(request):
         job_seeker = request.POST.get("job_seeker")
         adhar_front = request.FILES.get('adhar_front')
         adhar_back = request.FILES.get('adhar_back')
-
-        
-        
         password = request.POST.get('mobile_no')
         role=Role.objects.get(id=role_id)
         amount = int(request.POST.get("amount"))*100 

@@ -302,8 +302,11 @@ def employer_profile(request):
 def emp_assign(request):
     if request.method=='POST':
         selected_buttons = request.POST.get('selected_buttons', '').split(',')
-        print(selected_buttons)
-    return render(request,'employer/emp_assign.html')
+        members=[]
+        for i in selected_buttons:
+            member=Member.objects.get(id=i)
+            members.append(member)
+    return render(request,'employer/emp_assign.html',{'members':members})
 
 def emp_notify(request):
     return render(request,'employer/emp_notify.html')
