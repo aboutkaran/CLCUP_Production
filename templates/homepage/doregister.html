@@ -63,7 +63,8 @@
               <hr class="bg-primary mb-1">
               <div class="d-flex justify-content-center">  
                 {% if payment %}
-                <a id="rzp-button1" ><button type="submit" class="btn btn-warning btn-lg">Confirm</button></a>
+                <a href="{% url 'member_qr' adminid %}"><button class="btn btn-warning badge rounded-pill text-dark" >QR Payment</button></a>
+                {% comment %} <a id="rzp-button1" ><button type="submit" class="btn btn-warning btn-lg rounded-pill ">Razorpay Payment</button></a> {% endcomment %}
                 {% endif %} 
               </div>
 

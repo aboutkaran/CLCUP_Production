@@ -158,9 +158,11 @@ def douserregister(request):
         user.member.role_id=role
         
         user.member.amount=amount/100
-        user.member.payment_id=payment['id']
+        # user.member.payment_id=payment['id']
         # if user.member.paid == True:
         user.save()
+        
+        
 
     #   
         context = {
@@ -170,14 +172,26 @@ def douserregister(request):
         'mobile_no':mobile_no,
         'adhaar':adhaar,     
         'payment':payment,
-        'dob':dob
-
+        'dob':dob,
+        'adminid':user.member.admin_id,
         }
 
         return render(request , 'homepage/doregister.html',context)
     return render(request,'homepage/doregister.html')
+      
         
-    
+def member_qr(request,adminid):
+    return render(request,'MEMBERS/member_qr.html',{'adminid':adminid})
+
+def qr_status(request,adminid):
+    if request.method=="POST":
+        payment_id=request.POST.get("payment_id")
+        mem=Member.objects.get(admin_id=adminid)
+        mem.payment_id=payment_id
+        mem.save()
+    return render(request,'MEMBERS/qr_status.html')
+
+
 @csrf_exempt
 def Success(request):
  if request.method=="POST":
@@ -206,9 +220,15 @@ def doLogin(request):
     
         user=EmailBackEnd.authenticate(request,username=request.POST.get("adhaarNo"),password=request.POST.get("password"))
         if user!=None:
-            login(request,user)
+            
             if user.user_type=="4":
-                return HttpResponseRedirect(reverse("member_dashboard"))
+                if user.member.paid==1:
+                    login(request,user)
+                    return HttpResponseRedirect(reverse("member_dashboard"))
+                else:
+                    messages.error(request,'Access Denied')
+                    return HttpResponseRedirect(reverse("member_login"))
+             
                 # return HttpResponseRedirect('/admin_home')
             # elif user.user_type=="2":
             #     return HttpResponseRedirect(reverse("staff_home"))
@@ -218,7 +238,7 @@ def doLogin(request):
             # else:
             #     return HttpResponseRedirect(reverse("student_home"))
         else:
-            messages.error(request,"Invalid adhaar number or password !!")
+            messages.warning(request,"Invalid adhaar number or password !!")
             return HttpResponseRedirect(reverse("member_login"))
 
 

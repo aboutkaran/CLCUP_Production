@@ -82,6 +82,7 @@
 </style>
 <!--================Blog Area =================-->
 <section class="wrapper mt-5">
+  <h4>{% include 'BASE/messages.html' %}</h4>
   <div class="container pt-5">
     <div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 text-center">
       <form method="post" action="{% url 'hod_dologin2' %}" class="rounded bg-white shadow py-3 px-4">
@@ -90,7 +91,7 @@
           {% comment %} <img src="{% static 'assets/img/logo/fotter.jpg' %}" class="img-fluid" alt="Logo"> {% endcomment %}
         </div>
         <h3 class="text-dark fw-bolder fs-4 mb-4">Admin Login</h3>
-        <h4>{% include 'BASE/messages.html' %}</h4>
+        
         <div class="form-floating mb-3">
           <input type="text" class="form-control"  name="username" placeholder="Username">
           <label for="floatingInput">Username</label>

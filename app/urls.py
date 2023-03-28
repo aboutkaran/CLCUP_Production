@@ -68,6 +68,7 @@ urlpatterns = [
     # path('HOD/employee/Delete/<str:employee_id>', HOD_VIEWS.DELETE_EMPLOYEE,name="delete_emplo
 
     path('HOD/manage_members',HOD_VIEWS.manage_members,name="manage_members"),
+    path('HOD/manage_members/payment_val/<int:id>',HOD_VIEWS.payment_val,name="payment_val"),
     path('HOD/courselist', HOD_VIEWS.courselist, name="courselist"),
 
 
@@ -88,6 +89,8 @@ urlpatterns = [
     path('MEMBERS/Dashboard', MEMBERS_VIEWS.dashboard,name="member_dashboard"),
     path('MEMBERS/payment_information', MEMBERS_VIEWS.payment_information,name="payment_information"),
     path('MEMBERS/profile',MEMBERS_VIEWS.member_profile,name="member_profile"),
+    path('MEMBERS/QR_Payment/<int:adminid>',MEMBERS_VIEWS.member_qr,name="member_qr"),
+    path('MEMBERS/QR_Status/<int:adminid>',MEMBERS_VIEWS.qr_status,name="qr_status"),
     path('MEMBERS/list/<int:bookingid>',MEMBERS_VIEWS.member_list,name="member_list"),
     
     

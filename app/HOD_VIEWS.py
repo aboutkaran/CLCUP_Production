@@ -188,6 +188,20 @@ def DELETE_ROLE(request,role_id):
     messages.success(request,"Record are Successfully Deleted")
     return redirect('manage_role')
 
+def payment_val(request,id):
+    mem=Member.objects.get(id=id)
+    print(request.GET)
+    status = request.GET.get('status')
+    if status=='accept':
+        mem.paid=1 
+        messages.success(request,f" {mem.admin}'s Access has been approved") 
+    elif status=='reject':
+        mem.paid=0
+        messages.error(request,f" {mem.admin}'s Access has been declined")
+    mem.save()
+    
+    return redirect('manage_members')
+    # return render(request,'HOD/why.html')
 
 
 
@@ -343,7 +357,7 @@ def edit_instructor_save(request):
 
 def manage_members(request):
     member = Member.objects.all()
-
+    
     return render(request,'HOD/manage_members.html',{'member':member})
 
 
