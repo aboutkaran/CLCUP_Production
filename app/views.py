@@ -137,10 +137,11 @@ def worlker_list(request,id,bookingid):
 
 @csrf_exempt
 def booking_Success(request,bookingid):
-    if request.method=="POST":
+    # if request.method=="POST":
         a=request.POST
         # print(a)
         order_id=""
+        temp=""
         for key,val in a.items():
             if key=="razorpay_order_id":
                 order_id = val
@@ -151,9 +152,9 @@ def booking_Success(request,bookingid):
         # user=Booking.objects.create(payment_id=order_id).first() 
         user.payment_id=order_id
         user.paid=True
-        temp=user.paid
+        temp=True
         user.save()
-    return render(request , 'employer/emp_success.html',{'checkuserPaid':temp,'bookingid':bookingid})   
+        return render(request , 'employer/emp_success.html',{'checkuserPaid':temp,'bookingid':bookingid})   
 def testing(request):
     event_list = Role.objects.all()
     if request.method == "POST":

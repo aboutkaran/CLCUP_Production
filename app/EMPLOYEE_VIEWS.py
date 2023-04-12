@@ -118,15 +118,15 @@ def employer_doempbooking(request,id,bookingid):
         no_of_emp=count
     else :
         no_of_emp=membercount
-    client=razorpay.Client(auth =("rzp_test_czVP739sBN5blU" , "MBpgYsg92tAkraZtv5BMyLeq"))
+    # client=razorpay.Client(auth =("rzp_test_czVP739sBN5blU" , "MBpgYsg92tAkraZtv5BMyLeq"))
     amount=int(no_of_emp)*int(monthly_offered)
     total=amount*100
-    payment=client.order.create({'amount':total, 'currency':'INR' , 'payment_capture' : '1'})
+    # payment=client.order.create({'amount':total, 'currency':'INR' , 'payment_capture' : '1'})
     request.session[f'request.user.id']= int(no_of_emp)
     request.session['roleId']=id
     request.session['dept']=depttype
     request.session.save()
-    return render(request,'employer/doempbooking.html',{'payment':payment,'no_of_emp':no_of_emp,'monthly_offered':monthly_offered,'amount':amount,'bookingid':bookingid})
+    return render(request,'employer/doempbooking.html',{'no_of_emp':no_of_emp,'monthly_offered':monthly_offered,'amount':amount,'bookingid':bookingid})
 
 
 def employer_manageattendance(request):

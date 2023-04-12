@@ -6,7 +6,11 @@ from ckeditor.fields import RichTextField
 import os
 
 # Create your models here.
-
+NOTIFICATION_CHOICES=[
+    ('accepted','accepted'),
+    ('pending','pending'),
+    ('rejected','rejected')
+]
 
 
 class CustomUser(AbstractUser):
@@ -275,7 +279,12 @@ class Training(models.Model):
     def __str__(self):
         return self.admin.username
     
-
+class Notification(models.Model):
+    emp_id=models.CharField(max_length=50)
+    mem_id=models.CharField(max_length=50)
+    status=models.CharField(max_length=500,choices=NOTIFICATION_CHOICES)
+    def __str__(self):
+        return self.emp_id + self.mem_id
 
 @receiver(post_save,sender=CustomUser)
 def create_user_profile(sender,instance,created,**kwargs):

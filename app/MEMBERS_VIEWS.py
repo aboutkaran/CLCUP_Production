@@ -134,9 +134,9 @@ def douserregister(request):
         password = request.POST.get('mobile_no')
         role=Role.objects.get(id=role_id)
         amount = int(request.POST.get("amount"))*100 
-        client=razorpay.Client(auth =("rzp_test_czVP739sBN5blU" , "MBpgYsg92tAkraZtv5BMyLeq"))
+        # client=razorpay.Client(auth =("rzp_test_czVP739sBN5blU" , "MBpgYsg92tAkraZtv5BMyLeq"))
         
-        payment=client.order.create({'amount':amount, 'currency':'INR' , 'payment_capture' : '1'})
+        # payment=client.order.create({'amount':amount, 'currency':'INR' , 'payment_capture' : '1'})
         user=CustomUser.objects.create_user(username=username,adhaar=adhaar,password=password,user_type=4)
         user.member.father_name=father_name
         user.member.gender=gender
@@ -171,7 +171,7 @@ def douserregister(request):
         # 'father_name':father_name,
         'mobile_no':mobile_no,
         'adhaar':adhaar,     
-        'payment':payment,
+        # 'payment':payment,
         'dob':dob,
         'adminid':user.member.admin_id,
         }
