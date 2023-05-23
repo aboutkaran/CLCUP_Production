@@ -3,10 +3,9 @@ from .import views,HOD_VIEWS,MEMBERS_VIEWS,EMPLOYEE_VIEWS,INSTRUCTOR_VIEWS,TRAIN
 from django.contrib.auth import views as auth_views 
 from django.conf import settings
 from django.conf.urls.static import static
-
 from django.views.static import serve 
 from django.urls import re_path
-
+from .MEMBERS_VIEWS import GeneratePDF
 
 urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
@@ -35,6 +34,7 @@ urlpatterns = [
     path('HOD/edit_city',HOD_VIEWS.edit_city_save,name="edit_city_save"),
     path('HOD/manage_attendance',HOD_VIEWS.manage_attendance,name="hod_manageattendance"),
     path('HOD/manage_attendance/<int:id>',HOD_VIEWS.manage_individual,name="hod_manageindividual_atten"),
+    path('HOD/manage_details',HOD_VIEWS.manage_details,name="hod_managedetails"),
 
     path('HOD/add_role',HOD_VIEWS.ADD_ROLE,name="add_role"),
     path('HOD/manage_role',HOD_VIEWS.MANAGE_ROLE,name="manage_role"),
@@ -48,7 +48,8 @@ urlpatterns = [
     path('HOD/center/Delete/<str:center_id>', HOD_VIEWS.DELETE_CENTER,name="delete_center"),
     path('HOD/Location',HOD_VIEWS.LOCATION,name="location"),
     path('HOD/doLocation',HOD_VIEWS.doLocation,name="doLocation"),
-    # path('HOD/manage_location',HOD_VIEWS.manage_location,name="manage_location"),
+    path('HOD/EmployeesSalary',HOD_VIEWS.employeesSalary,name="employeesSalary"),
+    path('HOD/DoEmployeesSalary',HOD_VIEWS.doEmployeesSalary,name="doemployeesSalary"),
     
 
 
@@ -70,12 +71,15 @@ urlpatterns = [
     path('HOD/manage_members',HOD_VIEWS.manage_members,name="manage_members"),
     path('HOD/manage_members/payment_val/<int:id>',HOD_VIEWS.payment_val,name="payment_val"),
     path('HOD/courselist', HOD_VIEWS.courselist, name="courselist"),
+    path('HOD/PaymentValidation',HOD_VIEWS.payment_validation,name="payment_validation"),
+    
 
 
 
     ############################# MEMBER URL ###########################################
     
     path('register/',MEMBERS_VIEWS.register,name="register"),
+    path('registration/pdf/', GeneratePDF.as_view(), name='generate_pdf'),
     path('dummy/',MEMBERS_VIEWS.dummy,name="dummy"),
     path('instantservice/',MEMBERS_VIEWS.instant_service,name="instant_register"),
     path('technicianlist/',MEMBERS_VIEWS.technicianlist,name="technician_list"),
@@ -92,6 +96,10 @@ urlpatterns = [
     path('MEMBERS/QR_Payment/<int:adminid>',MEMBERS_VIEWS.member_qr,name="member_qr"),
     path('MEMBERS/QR_Status/<int:adminid>',MEMBERS_VIEWS.qr_status,name="qr_status"),
     path('MEMBERS/list/<int:bookingid>',MEMBERS_VIEWS.member_list,name="member_list"),
+    path('MEMBERS/mem_notify',MEMBERS_VIEWS.mem_notify,name="member_notify"),
+    path('MEMBERS/mem_notify/<int:empid>/<str:status>',MEMBERS_VIEWS.emp_booked,name="emp_booked"),
+    
+
     
     
 
@@ -129,12 +137,22 @@ urlpatterns = [
     path('EMPLOYER/List_of_employer',EMPLOYEE_VIEWS.List_of_employer,name="List_of_employer"),
     path('EMPLOYER/emp_assign',EMPLOYEE_VIEWS.emp_assign,name="emp_assign"),
     path('EMPLOYER/emp_notify',EMPLOYEE_VIEWS.emp_notify,name="emp_notify"),
+    path('EMPLOYER/MEMBERS_LIST',EMPLOYEE_VIEWS.members_list,name="emp_mem_list"),
+    path('EMPLOYER/down-pdf',EMPLOYEE_VIEWS.down_pdf,name="down-pdf"),
+    path('EMPLOYER/download_pdf/<int:id>',EMPLOYEE_VIEWS.download_pdf,name="download_pdf"),
+    path('EMPLOYER/MEMBERSPAYMENT/<str:amount>/<str:month>',EMPLOYEE_VIEWS.mem_payment,name="mem_payment"),
+    path('EMPLOYER/SalaryPayment/<str:amount>/<str:month>',EMPLOYEE_VIEWS.salarypayment,name="salary_payment"),
+    path('EMPLOYER/MEMBERSPAYMENTSuccess/<str:month>/<int:emp_id>',EMPLOYEE_VIEWS.mem_paymentsuccess,name="mem_paymentsuccess"),
+    
+    
+   
 
 
 
 
     path('worlker_list/<int:id>/<int:bookingid>',views.worlker_list,name="worlker_list"),
     path('booking_success/<int:bookingid>', views.booking_Success , name='bookingSuccess'),
+    path('EMPLOYER/QR_Payment/<int:bookingid>',EMPLOYEE_VIEWS.qr_payment,name="qr_payment"),
     
 
 

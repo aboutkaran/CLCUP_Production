@@ -1,10 +1,18 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+import matplotlib.pyplot as plt
 from app.models import*
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from .globals import monthhh, set_month
+import io
+from django.shortcuts import render
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+from django.template.loader import get_template
+import base64
 
 
 def login2(request):
@@ -34,8 +42,13 @@ def dologin2(request):
 def HOD(request):
     member_count=Member.objects.all().count()
     role_count=Role.objects.all().count()
+    # data = [10, 20, 30, 40, 50]
     instructor_count=Instructor.objects.all().count()
-    return render(request,'HOD/dashboard.html',{'member_count':member_count,'role_count':role_count,'instructor_count':instructor_count})
+    data = {
+        'labels': ['Total profit in April', 'Total profit till March', 'Overall profit'],
+        'values': [20000, 480000, 500000]
+    }
+    return render(request,'HOD/dashboard.html',{'member_count':member_count,'role_count':role_count,'instructor_count':instructor_count,'data':data})
 
 def ADD_CITY(request):
     if request.method == "POST":
@@ -144,6 +157,23 @@ def edit_role(request,role_id):
     role=Role.objects.get(id=role_id)
     return render(request,"HOD/edit_role.html",{"role":role,"id":role_id})
 
+def manage_details(request):
+    if request.method=="POST":
+        data=Notification.objects.filter(status='Accepted')
+        month = request.POST.get('month')
+        emp_visibility=request.POST.get('emp_visibility')
+        settings, created = GlobalSettings.objects.get_or_create(pk=1)
+        settings.month = month
+        settings.save()
+        if emp_visibility == "Show":
+            for i in data:
+                i.emp_paid=False
+                i.save()
+        else:
+            for i in data:
+                i.emp_paid=True
+                i.save() 
+    return render(request,'HOD/manage_details.html')
 
 
 def edit_role_save(request):
@@ -185,8 +215,21 @@ def DELETE_ROLE(request,role_id):
     # agent = SuperAgent.objects.get(admin=id)
     role = Role.objects.get(id=role_id)
     role.delete()
-    messages.success(request,"Record are Successfully Deleted")
+    messages.success(request,"Record is Successfully Deleted")
     return redirect('manage_role')
+
+
+def employeesSalary(request):
+    return render(request,'HOD/employeesalary.html')
+
+def doEmployeesSalary(request):
+    if request.method == "POST":
+        month=request.POST.get("month")
+        data=AttendancePDFForm.objects.filter(month=month)
+        context={
+            'data':data,
+        }
+    return render(request,'HOD/employeesalary.html',context)
 
 def payment_val(request,id):
     mem=Member.objects.get(id=id)
@@ -204,6 +247,25 @@ def payment_val(request,id):
     # return render(request,'HOD/why.html')
 
 
+def payment_validation(request):
+    data=SalaryValidation.objects.all()
+    if request.method=="POST":
+        action=request.POST.get('validation')
+        payment_id=request.POST.get('payment_id')
+        remark=request.POST.get('remark')
+        validated_entry=SalaryValidation.objects.get(payment_id=payment_id)
+        validated_entry.is_validated=True
+        validated_entry.save()
+        mem_data=AttendancePDFForm.objects.filter(payment_id=payment_id)
+        for i in mem_data:
+            i.remark=remark
+            i.paid_status=action
+            i.save()
+    context={
+        'data':data,
+    }
+
+    return render(request,'HOD/payment_validation.html',context)
 
 def ADD_EMPLOYEE(request):
 
@@ -231,11 +293,11 @@ def do_employee_signup(request):
 
 
 def manage_employee(request):
-    employee=Employee.objects.all()
+    employee=Employer.objects.all()
     return render(request,"HOD/manage_employee.html",{"employee":employee})
 
 def edit_employee(request,employee_id):
-    employee=Employee.objects.get(admin=employee_id)
+    employee=Employer.objects.get(admin=employee_id)
     return render(request,"HOD/edit_employee.html",{"employee":employee,"id":employee_id})
 
 
@@ -258,7 +320,7 @@ def edit_employee_save(request):
             user.username=username
             user.save()
 
-            employee_model=Employee.objects.get(admin=employee_id)
+            employee_model=Employer.objects.get(admin=employee_id)
             employee_model.address=address
             employee_model.save()
             messages.success(request,"Successfully Edited Employee")
@@ -462,3 +524,4 @@ def courselist(request):
 
 
 # COURSE LIST VIEWS END
+

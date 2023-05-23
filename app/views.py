@@ -40,7 +40,6 @@ def jobdetails(request,pk):
     return render(request,'homepage/job_details.html',{'job':job})
 
 def course(request):
-    
     course = Course.objects.all().order_by('-id')
     paginator = Paginator(course, 2) # Show 25 contacts per page.
     page_number = request.GET.get('page')
@@ -137,23 +136,27 @@ def worlker_list(request,id,bookingid):
 
 @csrf_exempt
 def booking_Success(request,bookingid):
+        if request.method=="POST":
+            order_id=request.POST.get("payment_id")
+            user=Booking.objects.get(id=bookingid)
+            user.payment_id=order_id
+            user.paid=True
+            temp=True
+            user.save()
     # if request.method=="POST":
-        a=request.POST
-        # print(a)
-        order_id=""
-        temp=""
-        for key,val in a.items():
-            if key=="razorpay_order_id":
-                order_id = val
-                break
+        # a=request.POST
+        # # print(a)
+        # order_id=""
+        # temp=""
+        # for key,val in a.items():
+        #     if key=="razorpay_order_id":
+        #         order_id = val
+        #         break
         # booking = Employer.objects.get(admin=request.user.id)
         # booking_id=booking.id
-        user=Booking.objects.get(id=bookingid)
+        
         # user=Booking.objects.create(payment_id=order_id).first() 
-        user.payment_id=order_id
-        user.paid=True
-        temp=True
-        user.save()
+        
         return render(request , 'employer/emp_success.html',{'checkuserPaid':temp,'bookingid':bookingid})   
 def testing(request):
     event_list = Role.objects.all()

@@ -133,7 +133,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'hod_manageattendance' %}">Manage Attendance</a>
                                 </li>
-                                
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'hod_managedetails' %}">Manage Details</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -215,7 +217,7 @@
                 
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#pages_drp">
-                        <span class="feather-icon"><i data-feather="file-text"></i></span>
+                        <span class="feather-icon"><i data-feather="zap"></i></span>
                         <span class="nav-link-text">Instructor</span>
                     </a>
                     <ul id="pages_drp" class="nav flex-column collapse collapse-level-1">
@@ -234,6 +236,38 @@
                     </ul>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#salaries_drp">
+                        <span class="feather-icon"><i data-feather="zap"></i></span>
+                        <span class="nav-link-text">Manage Salaries</span>
+                    </a>
+                    <ul id="salaries_drp" class="nav flex-column collapse collapse-level-1">
+                        <li class="nav-item">
+                            <ul class="nav flex-column">
+                                {% comment %} <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'add_instructor' %}">Add Instructor</a>
+                                </li> {% endcomment %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'payment_validation' %}">Payment Validation</a>
+                                </li>
+                                
+                                
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <ul class="nav flex-column">
+                                {% comment %} <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'add_instructor' %}">Add Instructor</a>
+                                </li> {% endcomment %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'employeesSalary' %}">Manage Employees Salary</a>
+                                </li>
+                                
+                                
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
 
 
                 <li class="nav-item">
@@ -243,6 +277,7 @@
                     </a>
                     
                 </li>
+              
             </ul>
             {% comment %} <hr class="nav-separator">
             <div class="nav-header">

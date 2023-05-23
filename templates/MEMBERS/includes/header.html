@@ -102,6 +102,7 @@
                         </div>
                     </a>
                 </div>
+                
             </div>
         </li>
         <li class="nav-item dropdown dropdown-authentication">
@@ -141,3 +142,19 @@
         <a id="navbar_search_close" class="navbar-search-close" href="#"><span class="feather-icon"><i data-feather="x"></i></span></a>
     </div>
 </form>
+<script>
+    function showNotifications() {
+        var $link = $('#notification-link');
+        var $dropdown = $link.next('.dropdown-menu');
+        var url = $link.attr('href');
+        $.get(url, function(data) {
+            $dropdown.html(data);
+            $link.find('.badge').text('0').hide();
+        });
+    }
+
+    $('#notification-link').on('click', function(e) {
+        e.preventDefault();
+        showNotifications();
+    });
+</script>

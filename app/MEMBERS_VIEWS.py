@@ -12,8 +12,9 @@ from django.views.decorators.csrf import csrf_exempt
 import razorpay
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-
-
+from django.template.loader import get_template
+from django.views import View
+from xhtml2pdf import pisa
 def dummy(request):
     city = City.objects.all()
     role = Role.objects.all()
@@ -183,14 +184,83 @@ def douserregister(request):
 def member_qr(request,adminid):
     return render(request,'MEMBERS/member_qr.html',{'adminid':adminid})
 
+
+def emp_booked(request,empid,status):
+    memid=Member.objects.get(admin=request.user.id).id
+    mem=Member.objects.get(admin=request.user.id)
+    member=Notification.objects.get(Q(emp_id=empid) & Q(mem_id=memid))
+    emp=Employer.objects.get(id=empid)
+    othermem=Notification.objects.filter(mem_id=memid).exclude(emp_id=empid)
+    if status == 'True':
+        member.status='Accepted'
+        mem.is_employed=True
+        mem.save()
+        member.save()
+        for i in othermem:
+          i.status='Rejected'
+          i.save()
+    else:
+        member.status='Rejected'
+        member.save()
+    return render(request,'MEMBERS/emp_booked.html',{'member':member,'status':status,'employer':emp})
+
+
+
+class GeneratePDF(View):
+    def get(self, request):
+        # Get registration details from the database or form submission data
+        # ...
+        admin_id = request.GET.get('admin_id')
+        print(admin_id)
+        mem=Member.objects.get(admin=admin_id)
+        registration_details = {
+            'name': mem.admin,
+            'email': 'info@clc.com',
+            'phone': mem.mobile_no,
+            'address': mem.address,
+            'registration_date': mem.created_at.strftime('%b %d, %Y')
+        }
+
+        # Render the PDF template with registration details as context variables
+        template = get_template('MEMBERS/registration_pdf.html')
+        context = {'registration_details': registration_details}
+        html = template.render(context)
+
+        # Create a PDF response object with appropriate headers
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="registration.pdf"'
+
+        # Generate PDF file and write to response
+        pisa.CreatePDF(html, dest=response)
+
+        return response
+
+
 def qr_status(request,adminid):
     if request.method=="POST":
-        payment_id=request.POST.get("payment_id")
-        mem=Member.objects.get(admin_id=adminid)
-        mem.payment_id=payment_id
-        mem.save()
-    return render(request,'MEMBERS/qr_status.html')
+        try:
+            # Made an HTTP request to the URL that sends the text message
+            response = requests.get('http://world.masssms.tk/V2/http-api.php?apikey=pok9POX1PAImVeyq&senderid=ONITad&peid=1501465370000036089&templateid=1507164369557408315&senderid=ONITad&number=917838716761&message=Use OTP 9841 to login to your OniT account.&format=json url')
+            payment_id=request.POST.get("payment_id")
+            mem=Member.objects.get(admin_id=adminid)   
+            mem.payment_id=payment_id
+            mem.save()
+            pdf_url = reverse('generate_pdf')
+        except requests.exceptions.RequestException as e:
+            # Handle any exceptions that occurred during the request
+            return HttpResponse('Error occurred: {}'.format(str(e)))
 
+       
+    return render(request,'MEMBERS/qr_status.html',{'pdf_url':pdf_url,'id':adminid})
+
+def mem_notify(request):
+    id = Member.objects.get(admin=request.user.id).id
+    member=Member.objects.get(admin=request.user.id)
+    isemployed=member.is_employed
+    data=""
+    # if isemployed == False:
+    data=Notification.objects.filter(Q(mem_id=id) & Q(status='Pending'))
+    return render(request,'MEMBERS/mem_notify.html',{'data':data,'isemployed':isemployed})
 
 @csrf_exempt
 def Success(request):
@@ -285,13 +355,13 @@ def member_list(request,bookingid):
         depttype=request.session.get('dept',None)
         roleId=request.session.get('roleId',None)
         if user.paid==1:   
-            member = Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))
+            member = Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype) & Q(is_employed=False))
             if count +2 <= member.count():
-                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))[:count+2]
+                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype) & Q(is_employed=False))[:count+2]
             elif count +1 == member.count():
-                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))[:count+1]
+                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype) & Q(is_employed=False))[:count+1]
             else :
-                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype))
+                membertoShow=Member.objects.filter(Q(role_id_id=roleId) & Q(job_seeker=depttype) & Q(is_employed=False))
             return render(request, 'MEMBERS/list.html',{'member':membertoShow,'count':count})    
         else :
             return redirect('employer_managebooking')

@@ -13,6 +13,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.db.models import Q
+from django.http import FileResponse
+from .globals import monthhh
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -95,6 +98,86 @@ def employer_managebooking(request):
     booking_data = Booking.objects.filter(employer_id=booking)
     return render(request, 'employer/emp_manage_booking.html', {'booking_data': booking_data})
 
+def members_list(request):
+    emp_id = Employer.objects.get(admin=request.user.id).id
+    data=Notification.objects.filter(Q(status='Accepted') & Q(emp_id=emp_id) & Q(emp_paid=False))
+    settings = GlobalSettings.objects.get(pk=1)
+    month = settings.month
+    emp_name=Employer.objects.get(admin=request.user.id).admin.username
+    if request.method=="POST":
+        id=request.POST.get('id')
+        mem_name=request.POST.get('name')
+        no_of_days=request.POST.get('no_of_days')
+        month=month
+        pdf_file1=request.FILES.get('salary')
+        amount=float(no_of_days)*(9000/30)
+        
+        salary_receipt=AttendancePDFForm.objects.create(month=month,no_of_days=no_of_days,pdf_file=pdf_file1,mem_id=id,mem_name=mem_name,org_name=emp_name,amount=amount,emp_id=emp_id)
+        salary_receipt.save()
+        messages.success(request,'Your File has been uploaded.')
+    return render(request,'employer/emp_mem_list.html',{'data':data,'month':month})
+def mem_payment(request,amount,month):
+    payment=""
+    emp_id = Employer.objects.get(admin=request.user.id).id
+    # client=razorpay.Client(auth=("rzp_test_c9U71b8iZvSlxi" , "DkSl2ey8clwF0dtmPlq73QUe"))
+    amount=amount
+    total=int(amount)*100
+    # payment=client.order.create({'amount':total, 'currency':'INR' , 'payment_capture' : '1'})
+    return render(request,'employer/mem_payment.html',{'amount':amount,'month':month,'emp_id':emp_id})
+
+
+def down_pdf(request):
+    pdf_file = open('static/attendance_pdf/format.pdf', 'rb')
+    return FileResponse(pdf_file, as_attachment=True, filename='salary_format.pdf')
+
+def qr_payment(request,bookingid):
+    context={
+        'bookingid':bookingid,
+    }
+    return render(request,'employer/qr_payment.html',context)
+
+
+
+# @csrf_exempt
+def mem_paymentsuccess(request,month,emp_id):
+    a=request.POST
+    order_id=""
+    # emp_id = Employer.objects.get(admin=request.user.id).id
+    # for key,val in a.items():
+    #     if key=="razorpay_order_id":
+    #         order_id = val
+    #         break
+    order_id=request.POST.get('payment_id')
+    org_name = Employer.objects.get(admin=request.user.id).admin.username
+    data=Notification.objects.filter(Q(status='Accepted') & Q(emp_id=emp_id) & Q(emp_paid=False))
+    data_month=AttendancePDFForm.objects.filter(Q(month=month) & Q(emp_id=emp_id))
+    payment_upload=SalaryValidation.objects.create(emp_id=emp_id,org_name=org_name,month=month,payment_id=order_id)
+    payment_upload.save()
+    if request.method== "POST":
+        for i in data:
+            i.emp_paid=True
+            i.save()
+        # data.save()
+        for i in data_month:
+            i.paid_status='Pending'
+            i.payment_id=order_id
+            i.save()
+        # data_month.save()
+    return render(request,'employer/mem_paymentsuccess.html')
+
+def download_pdf(request,id):
+    name=Notification.objects.get(mem_id=id).name
+    if request.method=="POST":
+        org_name=request.POST.get('org_name')
+        month=request.POST.get('month')
+        no_of_days=request.POST.get('no_of_days')
+        pdf_file1=request.FILES.get('salary')
+        salary_receipt=AttendancePDFForm.objects.create(org_name=org_name,month=month,no_of_days=no_of_days,pdf_file=pdf_file1)
+        salary_receipt.save()
+        messages.success(request,'Your File has been uploaded.')
+    return render(request,'employer/download_pdf.html',{'id':id,'mem_name':name})
+
+
 
 def employer_bookinglist(request):
 
@@ -162,6 +245,7 @@ def member_list(request):
 
 def add_movie(request):
     return render(request, 'add_movie.html')
+
 
 
 def employer_register(request):
@@ -302,14 +386,32 @@ def employer_profile(request):
 def emp_assign(request):
     if request.method=='POST':
         selected_buttons = request.POST.get('selected_buttons', '').split(',')
+        emp_id = Employer.objects.get(admin=request.user.id).id
+        emp_name=Employer.objects.get(id=emp_id)
         members=[]
-        for i in selected_buttons:
-            member=Member.objects.get(id=i)
+        for mem_id in selected_buttons:
+            member=Member.objects.get(id=mem_id)
+            notification=Notification.objects.create(name=member.admin.username,emp_id=emp_id,mem_id=mem_id,status='Pending',emp_name=emp_name.admin.username,message=f'You have been Requested to be employed by {emp_name.admin.username}',emp_city=emp_name.emp_city,emp_address=emp_name.address)
             members.append(member)
+            notification.save()
+        
+        # for i in selected_buttons:
+            
     return render(request,'employer/emp_assign.html',{'members':members})
 
 def emp_notify(request):
-    return render(request,'employer/emp_notify.html')
+    id = Employer.objects.get(admin=request.user.id).id
+    data=Notification.objects.filter(emp_id=id)
+    return render(request,'employer/emp_notify.html',{'data':data})
+
+def salarypayment(request,amount,month):
+    id = Employer.objects.get(admin=request.user.id).id
+    return render(request,'employer/salary_payment.html',{'month':month,'emp_id':id})
+
+
+
+
+
 
 def login2(request):
     return render(request, 'employer/employer_login2.html')

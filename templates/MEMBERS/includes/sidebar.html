@@ -57,7 +57,35 @@
                         </li>
                     </ul>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#notify_drp">
+                        <span class="feather-icon"><i data-feather="zap"></i></span>
+                        <span class="nav-link-text">Job Opportunities</span>
+                    </a>
+                    <ul id="notify_drp" class="nav flex-column collapse collapse-level-1">
+                        <li class="nav-item">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    {% comment %} {% if user.user_type == '4' %} {% endcomment %}
+                                    <a class="nav-link" href="{% url 'member_notify' %}">
+                                           Employer's Notification
+                                        </a>
+                                        {% comment %} {% else %}
+                                        <a class="nav-link" href="{% url 'training_payment_information' %}">
+                                            Payment Info
+                                         </a>
+                                         {% endif %} {% endcomment %}
+                                   
+                                </li>
+                              
+                                {% comment %} <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'manage_employee' %}">Manage Employee</a>
+                                </li> {% endcomment %}
+                                
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
                 
                 
                 {% comment %} <li class="nav-item">

@@ -21,9 +21,36 @@
         </ol>
     </nav>
     <div class="container">
-        <div>
-           <h2>This is Notification Page.</h2>
-    </div>
+        <div class="table-responsive">
+            <div style="margin-bottom: 20px; font-size: 35px; text-align: center; font-weight: 400;">Employees Notification</div>
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                    <th><strong>#</strong></th>
+                    <th><strong>Name</strong></th>
+                    <th><strong>Action</strong></th>
+                </tr>
+              </thead>
+              <tbody>
+               {% for i in data %}
+               <tr>
+                <th>{{forloop.counter}}</th>
+                <th>{{i.name}}</th>
+                
+                {% if i.status == 'Pending' %}
+                <td class="p-3 mb-2 bg-warning text-white">Pending </td>
+                {% endif %}
+                {% if i.status == 'Accepted' %}
+                <td class="p-3 mb-2 bg-success text-white">Accepted </td>
+                {% endif %}
+                {% if i.status == 'Rejected' %}
+                <td class="p-3 mb-2 bg-danger text-white">Rejected </td>
+                {% endif %}
+               </tr>
+               {% endfor %}           
+              </tbody>
+            </table>
+          </div>
 </div>
 
 {% block linkjs %}

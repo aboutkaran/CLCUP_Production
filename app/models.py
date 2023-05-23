@@ -7,9 +7,23 @@ import os
 
 # Create your models here.
 NOTIFICATION_CHOICES=[
-    ('accepted','accepted'),
-    ('pending','pending'),
-    ('rejected','rejected')
+    ('Accepted','Accepted'),
+    ('Pending','Pending'),
+    ('Rejected','Rejected')
+]
+MONTH_CHOICES=[
+    ('January','January'),
+    ('February','February'),
+    ('March','March'),
+    ('April','April'),
+    ('May','May'),
+    ('June','June'),
+    ('July','July'),
+    ('August','August'),
+    ('September','September'),
+    ('October','October'),
+    ('November','November'),
+    ('December','December'),
 ]
 
 
@@ -73,9 +87,6 @@ class Role(models.Model):
     
 class Employer(models.Model):
     admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    
-
-    
     mob_no = models.IntegerField(null=True,blank=True)
     emp_city = models.CharField(max_length=100)
     emp_state = models.CharField(max_length=100)
@@ -94,6 +105,8 @@ class Employer(models.Model):
     def __str__(self):
         return self.admin.username
 
+class GlobalSettings(models.Model):
+    month = models.CharField(max_length=20)
 
 class Booking(models.Model):
     # id=models.AutoField(primary_key=True)
@@ -231,6 +244,7 @@ class Member(models.Model):
     payment_id=models.CharField(max_length=70)
     paid=models.BooleanField(default=False)
     amount=models.CharField(max_length=70)
+    is_employed=models.BooleanField(default=False)
     role_id=models.ForeignKey(Role,on_delete=models.DO_NOTHING,null=True,blank=True)
     marital_status=models.CharField(max_length=50,null=True,blank=True)
     job_seeker=models.CharField(max_length=50,null=True,blank=True)
@@ -280,11 +294,34 @@ class Training(models.Model):
         return self.admin.username
     
 class Notification(models.Model):
+    name=models.CharField(max_length=500,null=True,blank=True)
+    message = models.CharField(max_length=1000,null=True,blank=True)
+    emp_name=models.CharField(max_length=500,null=True,blank=True)
     emp_id=models.CharField(max_length=50)
     mem_id=models.CharField(max_length=50)
     status=models.CharField(max_length=500,choices=NOTIFICATION_CHOICES)
+    emp_city=models.CharField(max_length=500,null=True,blank=True)
+    emp_address=models.TextField(null=True,blank=True)
+    emp_paid=models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True,null=True,auto_created=True)
     def __str__(self):
-        return self.emp_id + self.mem_id
+        return self.name + "(" + self.emp_name + ")"
+
+class AttendancePDFForm(models.Model):
+    org_name=models.CharField(max_length=1000,null=True,blank=True)
+    month=models.CharField(max_length=500,choices=MONTH_CHOICES,null=True,blank=True)
+    no_of_days=models.IntegerField(null=True,blank=True)
+    pdf_file=models.FileField(upload_to='Attendance/Attendance_Receipt')
+    mem_id=models.CharField(max_length=500,null=True,blank=True)
+    mem_name=models.CharField(max_length=500,null=True,blank=True)
+    emp_id=models.CharField(max_length=500,null=True,blank=True)
+    amount=models.IntegerField(null=True,blank=True)
+    payment_id=models.CharField(max_length=500,null=True,blank=True)
+    paid_status=models.CharField(max_length=500,null=True,blank=True,choices=NOTIFICATION_CHOICES)
+    remark=models.CharField(max_length=1000,null=True,blank=True)
+    def __str__(self):
+        return self.org_name
+
 
 @receiver(post_save,sender=CustomUser)
 def create_user_profile(sender,instance,created,**kwargs):
@@ -301,6 +338,15 @@ def create_user_profile(sender,instance,created,**kwargs):
             Training.objects.create(admin=instance,address="")
         # if instance.user_type==3:
         #     Students.objects.create(admin=instance,course_id=Courses.objects.get(id=1),session_year_id=SessionYearModel.object.get(id=1),address="",profile_pic="",gender="")
+
+class SalaryValidation(models.Model):
+    emp_id=models.CharField(max_length=500,null=True,blank=True)
+    org_name=models.CharField(max_length=500,null=True,blank=True)
+    month=models.CharField(max_length=500,null=True,blank=True)
+    payment_id=models.CharField(max_length=500,null=True,blank=True)
+    is_validated=models.BooleanField(max_length=500,choices=NOTIFICATION_CHOICES,null=True,blank=True)
+    def __str__(self):
+        return self.org_name
 
 
 

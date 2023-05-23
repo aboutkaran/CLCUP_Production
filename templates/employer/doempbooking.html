@@ -37,7 +37,8 @@
                   </table>
                   <div class="text-center" >
                   {% comment %} <button class="btn btn-primary" id="rzp-button1" style="border-radius:20px; margin-bottom:20px">Pay Now</button> {% endcomment %}
-                  <a href="{%url 'bookingSuccess' bookingid %}"><button class="btn btn-primary"  style="border-radius:20px; margin-bottom:20px">Pay Now</button></a>
+                  {% comment %} <a href="{%url 'bookingSuccess' bookingid %}"><button class="btn btn-primary"  style="border-radius:20px; margin-bottom:20px">Pay Now</button></a> {% endcomment %}
+                  <a href="{%url 'qr_payment' bookingid %}"><button class="btn btn-primary"  style="border-radius:20px; margin-bottom:20px">Pay Now</button></a>
                   </div>
                 </div>
             </div>

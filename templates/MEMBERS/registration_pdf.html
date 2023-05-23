@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Registration Details</title>
+    <style>
+      /* CSS styling for the PDF file */
+      /* ... */
+    </style>
+  </head>
+  <body>
+    <h1>Thank you for your registration!</h1>
+    <p>Here are your registration details:</p>
+    <table>
+      <tr>
+        <td>Name:</td>
+        <td>{{ registration_details.name }}</td>
+      </tr>
+      <tr>
+        <td>Email:</td>
+        <td>{{ registration_details.email }}</td>
+      </tr>
+      <tr>
+        <td>Phone:</td>
+        <td>{{ registration_details.phone }}</td>
+      </tr>
+      <tr>
+        <td>Address:</td>
+        <td>{{ registration_details.address }}</td>
+      </tr>
+      <tr>
+        <td>Registration Date:</td>
+        <td>{{ registration_details.registration_date }}</td>
+      </tr>
+      <!-- Add more registration details as desired -->
+    </table>
+  </body>
+</html>

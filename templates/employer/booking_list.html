@@ -16,9 +16,10 @@
     <td class="border_color">
         <!-- Button trigger modal -->
         {% comment %} <button class="btn btn-warning badge rounded-pill text-dark" hx-get="{% url 'worlker_list' movie.services.id %}" hx-target="#dialog">List Of Workers</button> {% endcomment %}
-        <button type="button" class="btn btn-warning badge rounded-pill text-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" hx-get="{% url 'worlker_list' movie.services.id movie.id%}" hx-target="#dialog">
+        {% comment %} <button type="button" class="btn btn-warning badge rounded-pill text-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" hx-get="{% url 'worlker_list' movie.services.id movie.id%}" hx-target="#dialog">
             List Of Workers
-        </button>
+        </button> {% endcomment %}
+        <a href="{% url 'worlker_list' movie.services.id movie.id%}"><button class="btn btn-warning badge rounded-pill text-dark">List of Workers</button></a>
         <!-- Modal -->
         <!-- Model code is in demo.html (line No 6)-->
     </td>
