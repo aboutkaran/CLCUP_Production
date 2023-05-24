@@ -20,12 +20,18 @@
             <li class="breadcrumb-item active" aria-current="page"></li>
         </ol>
     </nav>
+   
     <div class="container">
         <div class="table-responsive">
             <div style="margin-bottom: 20px; font-size: 35px; text-align: center; font-weight: 400;">Accepted Employees List</div>
             <div style="text-align:center;"><strong>The format for the Salary Receipt can be Download from here. </strong> <a href="{% url 'down-pdf' %}" download>
                 <i class="fa fa-download"></i> Download Pdf
             </a></div>
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
             <table class="table" style="margin-top:25px;">
                 <thead>
                   <tr>
@@ -72,8 +78,9 @@
 
                 </tbody>
               </table>
+              <div style="text-align:center;margin-bottom:20px;font-weight:bold;">Your Total Payable Amount is: {{amount}}</div>
               <div style="text-align:center;">
-              <a href="{% url 'mem_payment' 10000 month  %}"><button class="btn btn-primary" ><strong>Pay</strong></button></a>
+              <a href="{% url 'mem_payment' amount month  %}"><button class="btn btn-primary" ><strong>Pay</strong></button></a>
               </div>
           </div>
 </div>
