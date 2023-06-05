@@ -594,7 +594,6 @@ def do_emp_outer(request):
         # messages.success(request,"Successfully Created employer")
     return render(request, "employer/outer.html", {'city': city})
 
-
 def List_of_employer(request):
     employer = Employer.objects.all()
     return render(request, 'employer/list_of_employer.html', {'employer': employer})
