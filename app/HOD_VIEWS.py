@@ -50,6 +50,9 @@ def HOD(request):
     }
     return render(request,'HOD/dashboard.html',{'member_count':member_count,'role_count':role_count,'instructor_count':instructor_count,'data':data})
 
+
+def Generic_Info(request):
+    return render(request,'HOD/generic_info.html')
 def ADD_CITY(request):
     if request.method == "POST":
         city = request.POST.get('city')
@@ -349,6 +352,37 @@ def ADD_INSTRUCTOR(request):
     return render(request,'HOD/add_instructor.html')
 
 
+def make_course(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        practical_equip_names = request.POST.getlist('practical_equip')
+        theory_equip_names = request.POST.getlist('theory_equip')
+        assessment_equip_names = request.POST.getlist('assessment_equip')
+
+        # # Create the course
+        # course = courseaddition.objects.create(name=name)
+        # for equip_name in practical_equip_names:
+        #     equipment, _ = PracEquipment.objects.get_or_create(name=equip_name)
+        #     course.practical_equip.add(equipment)
+        
+        # for equip_name in theory_equip_names:
+        #     equipment, _ = TheoryEquipment.objects.get_or_create(name=equip_name)
+        #     course.theory_equip.add(equipment)
+
+        # for equip_name in assessment_equip_names:
+        #     equipment, _ = AssessEquipment.objects.get_or_create(name=equip_name)
+        #     course.assessment_equip.add(equipment)
+        
+        # Get the equipment objects for each category
+        # practical_equip = Equipment.objects.filter(name__in=practical_equip_names)
+        # theory_equip = Equipment.objects.filter(name__in=theory_equip_names)
+        # assessment_equip = Equipment.objects.filter(name__in=assessment_equip_names)
+        # print(practical_equip_names)
+        # # Set the equipment values
+        # course.practical_equip.set(practical_equip)
+        # course.theory_equip.set(theory_equip)
+        # course.assessment_equip.set(assessment_equip)
+    return render(request,'HOD/make_course.html')
 
 def do_instructor_signup(request):
     fname=request.POST.get("fname")

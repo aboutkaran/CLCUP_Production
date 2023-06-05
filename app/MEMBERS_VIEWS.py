@@ -15,6 +15,8 @@ from django.db.models import Q
 from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
+from reportlab.pdfgen import canvas
+from io import BytesIO
 def dummy(request):
     city = City.objects.all()
     role = Role.objects.all()
@@ -235,20 +237,19 @@ class GeneratePDF(View):
 
         return response
 
-
 def qr_status(request,adminid):
     if request.method=="POST":
-        try:
+        # try:
             # Made an HTTP request to the URL that sends the text message
-            response = requests.get('http://world.masssms.tk/V2/http-api.php?apikey=pok9POX1PAImVeyq&senderid=ONITad&peid=1501465370000036089&templateid=1507164369557408315&senderid=ONITad&number=917838716761&message=Use OTP 9841 to login to your OniT account.&format=json url')
+            # response = requests.get('http://world.masssms.tk/V2/http-api.php?apikey=pok9POX1PAImVeyq&senderid=ONITad&peid=1501465370000036089&templateid=1507164369557408315&senderid=ONITad&number=917838716761&message=Use OTP 9841 to login to your OniT account.&format=json url')
             payment_id=request.POST.get("payment_id")
             mem=Member.objects.get(admin_id=adminid)   
             mem.payment_id=payment_id
             mem.save()
             pdf_url = reverse('generate_pdf')
-        except requests.exceptions.RequestException as e:
-            # Handle any exceptions that occurred during the request
-            return HttpResponse('Error occurred: {}'.format(str(e)))
+        # except requests.exceptions.RequestException as e:
+        #     # Handle any exceptions that occurred during the request
+        #     return HttpResponse('Error occurred: {}'.format(str(e)))
 
        
     return render(request,'MEMBERS/qr_status.html',{'pdf_url':pdf_url,'id':adminid})

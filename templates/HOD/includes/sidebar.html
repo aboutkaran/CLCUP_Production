@@ -28,7 +28,13 @@
                 </li>
 
                 <hr class="nav-separator">
-
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Generic_Info' %}"  data-target="#pages_drp">
+                        <span class="feather-icon"><i data-feather="file-text"></i></span>
+                        <span class="nav-link-text">Generic Information</span>
+                    </a>
+                    
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#auth_gallery">
                         <span class="feather-icon"><i data-feather="zap"></i></span>
@@ -223,19 +229,16 @@
                     <ul id="pages_drp" class="nav flex-column collapse collapse-level-1">
                         <li class="nav-item">
                             <ul class="nav flex-column">
-                                {% comment %} <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'add_instructor' %}">Add Instructor</a>
-                                </li> {% endcomment %}
+                               <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'make_course' %}">Make Course</a>
+                                </li> 
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'manage_instructor' %}">Manage Instructor</a>
-                                </li>
-                                
-                                
+                                </li> 
                             </ul>
                         </li>
                     </ul>
-                </li>
-
+                </li>   
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0);" data-toggle="collapse" data-target="#salaries_drp">
                         <span class="feather-icon"><i data-feather="zap"></i></span>

@@ -122,7 +122,7 @@ class Booking(models.Model):
     pin_code = models.IntegerField(null=True,blank=True)
     specific_requirements = models.CharField(max_length=100,null=True,blank=True)
     sallery_offerd = models.IntegerField(null=True,blank=True)
-    goverment = models.CharField(max_length=100)
+    goverment = models.CharField(max_length=100,null=True,blank=True)
     department = models.CharField(max_length=50,null=True,blank=True)
     total_monthly = models.IntegerField(blank=True,null=True)
     paid=models.BooleanField(default=False)
@@ -152,7 +152,7 @@ class outer(models.Model):
     pin_code = models.IntegerField(null=True,blank=True)
     specific_requirements = models.CharField(max_length=100,null=True,blank=True)
     sallery_offerd = models.IntegerField(null=True,blank=True)
-    goverment = models.CharField(max_length=100)
+    goverment = models.CharField(max_length=100,null=True,blank=True)
     department = models.CharField(max_length=50,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -183,22 +183,56 @@ class Job(models.Model):
         return self.job_name
     
 
+# class PracEquipment(models.Model):
+#     name = models.CharField(max_length=100)
+
+#     def __str__(self):
+#         return self.name
+
+# class TheoryEquipment(models.Model):
+#     name = models.CharField(max_length=100)
+
+#     def __str__(self):
+#         return self.name
+
+# class AssessEquipment(models.Model):
+#     name = models.CharField(max_length=100)
+
+#     def __str__(self):
+#         return self.name
+
+# class courseaddition(models.Model):
+#     name = models.CharField(max_length=100)
+#     practical_equip = models.ManyToManyField(PracEquipment, related_name='practical_courses')
+#     theory_equip = models.ManyToManyField(TheoryEquipment, related_name='theory_courses')
+#     assessment_equip = models.ManyToManyField(AssessEquipment, related_name='assessment_courses')
+
+#     def __str__(self):
+#         return self.name
 
 class Course(models.Model):
     course_img = models.ImageField(upload_to = 'course_pic')
-    course_name = models.CharField(max_length=100)
-    course_amt = models.IntegerField()
-    company_name = models.CharField(max_length=100)
-    course_location = models.CharField(max_length=100)
+    course_name = models.CharField(max_length=100,null=True,blank=True)
+    course_amt = models.IntegerField(null=True,blank=True)
+    company_name = models.CharField(max_length=100,null=True,blank=True)
+    course_location = models.CharField(max_length=100,null=True,blank=True)
     course_des = RichTextField()
     course_skill = RichTextField()
     course_experience = RichTextField()
+    batch_size=models.IntegerField(null=True,blank=True)
+    start_date=models.CharField(max_length=100,null=True,blank=True)
+    end_date=models.CharField(max_length=100,null=True,blank=True)
+    no_of_seats=models.IntegerField(null=True,blank=True)
+    theory=models.CharField(max_length=100,null=True,blank=True)
+    practical=models.CharField(max_length=100,null=True,blank=True)
+    assesment=models.CharField(max_length=100,null=True,blank=True)
+    # selection_criteria=models.CharField(max_length=500)
+    Instructor_name=models.CharField(max_length=100,null=True,blank=True)
+    objective=models.TextField(null=True,blank=True)
 
     def __str__(self):
         return self.course_name
-# class AttendanceStatus(models.Model):
-#     date=models.CharField(max_length=100)
-#     status=models.BooleanField(default=False)
+
 
 
 class Attendance(models.Model):

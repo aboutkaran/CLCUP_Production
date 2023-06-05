@@ -21,3 +21,9 @@ admin.site.register(gallary)
 admin.site.register(Notification)
 admin.site.register(AttendancePDFForm)
 admin.site.register(SalaryValidation)
+# admin.site.register(courseaddition)
+# admin.site.register(PracEquipment)
+# admin.site.register(TheoryEquipment)
+# admin.site.register(AssessEquipment)
+
+

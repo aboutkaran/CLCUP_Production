@@ -46,9 +46,9 @@ def do_training_register(request):
       role=Role.objects.get(id=role_id)
 
       amount = int(request.POST.get("amount"))*100 
-      client=razorpay.Client(auth =("rzp_test_czVP739sBN5blU" , "MBpgYsg92tAkraZtv5BMyLeq"))
+    #   client=razorpay.Client(auth =("rzp_test_czVP739sBN5blU" , "MBpgYsg92tAkraZtv5BMyLeq"))
       
-      payment=client.order.create({'amount':amount, 'currency':'INR' , 'payment_capture' : '1'})
+    #   payment=client.order.create({'amount':amount, 'currency':'INR' , 'payment_capture' : '1'})
       user=CustomUser.objects.create_user(first_name=fname,last_name=lname,username=username,email=email,adhaar=adhaar,password=password,user_type=5)
       user.training.father_name=father_name
       user.training.gender=gender
@@ -66,14 +66,14 @@ def do_training_register(request):
       user.training.role_id=role
 
       user.training.amount=amount
-      user.training.payment_id=payment['id']
+    #   user.training.payment_id=payment['id']
       user.save()
       context = {
          'fname':fname,
          'lname':lname,
          'username':username,
          'email':email,
-         'payment':payment
+        #  'payment':payment
 
       }
 
@@ -104,7 +104,7 @@ def TRAINING_login(request):
 
 def training_doLogin(request):
     
-        user=EmailBackEnd.authenticate(request,username=request.POST.get("adhaarNo"),password=request.POST.get("password"))
+        user=EmailBackEnd.authenticate(request,username=request.POST.get("adhaar"),password=request.POST.get("password"))
         if user!=None:
             login(request,user)
             if user.user_type=="5":

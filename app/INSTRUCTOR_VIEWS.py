@@ -39,29 +39,30 @@ def dashboard(request):
 def add_course(request):
 
     if request.method == "POST":
-        course_pic=request.FILES.get('course_pic')
-        course_name = request.POST.get('course_name')
-        course_amt = request.POST.get('course_amt')
-        company_name = request.POST.get('company_name')
-        course_location = request.POST.get('course_location')
-        course_desc = request.POST.get('course_desc')
-        course_skills = request.POST.get('course_skills')
-        course_Experience = request.POST.get('course_Experience')
+        if request.method=="POST":
+            course_name=request.POST.get('course_name')
+            print(course_name)
+        # course_pic=request.FILES.get('course_pic')
+        # course_name = request.POST.get('course_name')
+        # course_amt = request.POST.get('course_amt')
+        # company_name = request.POST.get('company_name')
+        # course_location = request.POST.get('course_location')
+        # course_desc = request.POST.get('course_desc')
+        # course_skills = request.POST.get('course_skills')
+        # course_Experience = request.POST.get('course_Experience')
 
 
-        course = Course.objects.create(course_img=course_pic,course_name=course_name,course_amt=course_amt,company_name=company_name,course_location=course_location,course_desc=course_desc)
-        course.save()
-        messages.success(request,"Successfully Created Course")
+        # course = Course.objects.create(course_img=course_pic,course_name=course_name,course_amt=course_amt,company_name=company_name,course_location=course_location)
+        # course.save()
+        # messages.success(request,"Successfully Created Course")
     else:
-        
-        
         return render(request,'INSTRUCTOR/add_course.html')
         # messages.error(request,"Failed to Create Course")
 
     return render(request,'INSTRUCTOR/add_course.html')
 
 
- 
+
 def instructor_login(request):
     return render(request,'INSTRUCTOR/login.html')
 
